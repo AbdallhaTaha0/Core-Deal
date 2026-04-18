@@ -1,4 +1,4 @@
-# core-deal
+# server
 
 To install dependencies:
 
