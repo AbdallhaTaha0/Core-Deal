@@ -1,4 +1,5 @@
 const express = require("express");
+const morgan = require("morgan");
 const mongoose = require("mongoose");
 
 const app = express();
@@ -13,3 +14,5 @@ mongoose.connect(MONGODB_URI).then(() => {
   app.listen(5000);
   console.log("Server is now listening to port:5000");
 });
+
+app.use(morgan('dev'));
