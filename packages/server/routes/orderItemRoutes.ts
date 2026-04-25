@@ -1,5 +1,5 @@
 const express = require('express');
-import type { Request, Response, Router } from "express";
+import type { Router } from "express";
 const orderItemController = require('../controllers/orderItemController');
 
 const router: Router = express.Router();

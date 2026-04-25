@@ -9,6 +9,7 @@ import orderRoutes from "./routes/orderRoutes";
 import orderItemRoutes from "./routes/orderItemRoutes";
 import categoryRoutes from "./routes/categoryRoutes";
 import cartRoute from "./routes/cartRoute";
+import authRoutes from "./routes/authRoutes";
 
 const app = express();
 
@@ -33,12 +34,14 @@ app.get("/", (req: Request, res: Response) => {
     message: "Welcome to the Core Deal API",
   });
 });
+app.use(authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/orderItems", orderItemRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/carts", cartRoute);
+
 
 
 app.use((req: Request , res: Response)=>{
