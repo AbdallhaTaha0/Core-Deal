@@ -1,17 +1,25 @@
-import mongoose = require('mongoose');
-const { Schema } = require('mongoose');
+import mongoose, { Schema, Types } from 'mongoose';
 
-const orderSchema = new mongoose.Schema(
+type OrderType = {
+  userId: Types.ObjectId,
+  totalPrice: number,
+  paymentMethod: string,
+  paymentStatus: string,
+  orderStatus: string,
+  shippingAddress: string,
+};
+
+const orderSchema = new Schema<OrderType>(
   {
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: [true, "Please enter a user."],
     },
 
     totalPrice: {
       type: Number,
-      required: true,
+      required: [true, "Please enter a total price."],
     },
 
     paymentMethod: {
@@ -34,7 +42,7 @@ const orderSchema = new mongoose.Schema(
 
     shippingAddress: {
       type: String,
-      required: true,
+      required: [true, "Please enter a shipping address."],
     },
   },
   {
@@ -42,6 +50,6 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-const Order = mongoose.model("Order", orderSchema);
+const Order = mongoose.model<OrderType>("Order", orderSchema);
 
-module.exports = Order;
+export default Order;

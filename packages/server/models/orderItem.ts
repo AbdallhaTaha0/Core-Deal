@@ -1,34 +1,40 @@
-import mongoose = require('mongoose');
-const { Schema } = require('mongoose');
+import mongoose, { Schema, Types } from 'mongoose';
 
+type OrderItemType = {
+  orderId: Types.ObjectId,
+  productId: Types.ObjectId,
+  quantity: number,
+  price: number,
+  subtotal: number,
+};
 
-const orderItemSchema = new mongoose.Schema(
+const orderItemSchema = new Schema<OrderItemType>(
   {
     orderId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Order",
-      required: true,
+      required: [true, "Please enter an order."],
     },
 
     productId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Product",
-      required: true,
+      required: [true, "Please enter a product."],
     },
 
     quantity: {
       type: Number,
-      required: true,
+      required: [true, "Please enter a quantity."],
     },
 
     price: {
       type: Number,
-      required: true,
+      required: [true, "Please enter a price."],
     },
 
     subtotal: {
       type: Number,
-      required: true,
+      required: [true, "Please enter a subtotal."],
     },
   },
   {
@@ -36,6 +42,6 @@ const orderItemSchema = new mongoose.Schema(
   }
 );
 
-const OrderItem = mongoose.model("OrderItem", orderItemSchema);
+const OrderItem = mongoose.model<OrderItemType>("OrderItem", orderItemSchema);
 
-module.exports = OrderItem;
+export default OrderItem;

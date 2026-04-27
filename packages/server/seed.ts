@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-const User = require("./models/user");
-const Category = require("./models/category");
-const Product = require("./models/product");
-const Order = require("./models/order");
-const OrderItem = require("./models/orderItem");
-const Cart = require("./models/cart");
+import User from "./models/user";
+import Category from "./models/category";
+import Product from "./models/product";
+import Order from "./models/order";
+import OrderItem from "./models/orderItem";
+import Cart from "./models/cart";
 
 const seedDatabase = async () => {
   try {

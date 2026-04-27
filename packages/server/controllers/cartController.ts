@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-const Cart = require('../models/cart');
+import Cart from '../models/cart';
 
 const getAllCarts = async (req: Request, res: Response): Promise<void> => {
   try {

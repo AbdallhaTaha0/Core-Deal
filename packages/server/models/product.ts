@@ -1,11 +1,35 @@
-import mongoose = require('mongoose');
-const { Schema } = require('mongoose');
+import mongoose, { Schema, Types } from 'mongoose';
 
-const productSchema = new mongoose.Schema(
+type SpecificationsType = {
+  cpu?: string,
+  ram?: string,
+  storage?: string,
+  gpu?: string,
+  screenSize?: string,
+  refreshRate?: string,
+  battery?: string,
+  color?: string,
+  weight?: string,
+};
+
+type ProductType = {
+  name: string,
+  description?: string,
+  price: number,
+  discountPrice?: number,
+  stockQuantity: number,
+  brand?: string,
+  images?: string[],
+  specifications?: SpecificationsType,
+  status: string,
+  categoryId: Types.ObjectId,
+};
+
+const productSchema = new Schema<ProductType>(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, "Please enter a product name."],
     },
 
     description: {
@@ -14,7 +38,7 @@ const productSchema = new mongoose.Schema(
 
     price: {
       type: Number,
-      required: true,
+      required: [true, "Please enter a price."],
     },
 
     discountPrice: {
@@ -24,7 +48,7 @@ const productSchema = new mongoose.Schema(
 
     stockQuantity: {
       type: Number,
-      required: true,
+      required: [true, "Please enter a stock quantity."],
       default: 0,
     },
 
@@ -57,9 +81,9 @@ const productSchema = new mongoose.Schema(
     },
 
     categoryId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Category",
-      required: true,
+      required: [true, "Please enter a category."],
     },
   },
   {
@@ -67,7 +91,6 @@ const productSchema = new mongoose.Schema(
   }
 );
 
-const Product = mongoose.model("Product", productSchema);
+const Product = mongoose.model<ProductType>("Product", productSchema);
 
-
-module.exports = Product;
+export default Product;

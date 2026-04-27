@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-const Product = require('../models/product');
+import Product from '../models/product';
 
 const getAllProducts = async (req: Request, res: Response): Promise<void> => {
   try {

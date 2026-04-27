@@ -1,11 +1,16 @@
-import mongoose = require('mongoose');
-const { Schema } = require('mongoose');
+import mongoose, { Schema, Types } from 'mongoose';
 
-const categorySchema = new Schema(
+type CategoryType = {
+  name: string,
+  description?: string,
+  parentCategory?: Types.ObjectId | null,
+};
+
+const categorySchema = new Schema<CategoryType>(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, "Please enter a category name."],
       unique: true,
     },
 
@@ -14,7 +19,7 @@ const categorySchema = new Schema(
     },
 
     parentCategory: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Category",
       default: null,
     },
@@ -24,5 +29,6 @@ const categorySchema = new Schema(
   }
 );
 
-const Category = mongoose.model("Category", categorySchema);
-module.exports = Category;
+const Category = mongoose.model<CategoryType>("Category", categorySchema);
+
+export default Category;

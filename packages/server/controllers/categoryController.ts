@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-const Category = require('../models/category');
+import Category from '../models/category';
 
 const getAllCategories = async (req: Request, res: Response): Promise<void> => {
   try {
