@@ -2,6 +2,7 @@ import express from "express";
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 import type { Request, Response } from "express";
+import cookieParser from "cookie-parser";
 
 import userRoutes from "./routes/userRoutes";
 import productRoutes from "./routes/productRoutes";
@@ -27,6 +28,7 @@ mongoose.connect(MONGODB_URI).then(() => {
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
