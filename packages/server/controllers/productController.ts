@@ -1,16 +1,16 @@
-import type { Request, Response } from "express";
+import type { Request, Response, RequestHandler } from "express";
 import Product from '../models/product';
 
-const getAllProducts = async (req: Request, res: Response): Promise<void> => {
+const getAllProducts: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const products = await Product.find().sort({ createdAt: -1 });
     res.status(200).json(products);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: "Failed to fetch products", error });
   }
 };
 
-const getSingleProduct = async (req: Request, res: Response): Promise<void> => {
+const getSingleProduct: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
@@ -18,22 +18,22 @@ const getSingleProduct = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     res.status(200).json(product);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: "Failed to fetch product", error });
   }
 };
 
-const addProduct = async (req: Request, res: Response): Promise<void> => {
+const addProduct: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const product = new Product(req.body);
     const saved = await product.save();
     res.status(201).json(saved);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({ message: "Failed to create product", error });
   }
 };
 
-const updateProduct = async (req: Request, res: Response): Promise<void> => {
+const updateProduct: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const updated = await Product.findByIdAndUpdate(
       req.params.id,
@@ -45,12 +45,12 @@ const updateProduct = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     res.status(200).json(updated);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({ message: "Failed to update product", error });
   }
 };
 
-const deleteProduct = async (req: Request, res: Response): Promise<void> => {
+const deleteProduct: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const deleted = await Product.findByIdAndDelete(req.params.id);
     if (!deleted) {
@@ -58,12 +58,12 @@ const deleteProduct = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     res.status(200).json({ message: "Product deleted successfully" });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: "Failed to delete product", error });
   }
 };
 
-module.exports = {
+export default {
   getAllProducts,
   getSingleProduct,
   addProduct,

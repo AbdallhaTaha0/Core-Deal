@@ -1,16 +1,16 @@
-import type { Request, Response } from "express";
+import type { Request, Response, RequestHandler } from "express";
 import Cart from '../models/cart';
 
-const getAllCarts = async (req: Request, res: Response): Promise<void> => {
+const getAllCarts: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const carts = await Cart.find().sort({ createdAt: -1 });
     res.status(200).json(carts);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: "Failed to fetch carts", error });
   }
 };
 
-const getSingleCart = async (req: Request, res: Response): Promise<void> => {
+const getSingleCart: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const cart = await Cart.findById(req.params.id);
     if (!cart) {
@@ -18,22 +18,22 @@ const getSingleCart = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     res.status(200).json(cart);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: "Failed to fetch cart", error });
   }
 };
 
-const addCart = async (req: Request, res: Response): Promise<void> => {
+const addCart: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const cart = new Cart(req.body);
     const saved = await cart.save();
     res.status(201).json(saved);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({ message: "Failed to create cart", error });
   }
 };
 
-const updateCart = async (req: Request, res: Response): Promise<void> => {
+const updateCart: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const updated = await Cart.findByIdAndUpdate(
       req.params.id,
@@ -45,12 +45,12 @@ const updateCart = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     res.status(200).json(updated);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({ message: "Failed to update cart", error });
   }
 };
 
-const deleteCart = async (req: Request, res: Response): Promise<void> => {
+const deleteCart: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const deleted = await Cart.findByIdAndDelete(req.params.id);
     if (!deleted) {
@@ -58,12 +58,12 @@ const deleteCart = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     res.status(200).json({ message: "Cart deleted successfully" });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: "Failed to delete cart", error });
   }
 };
 
-module.exports = {
+export default {
   getAllCarts,
   getSingleCart,
   addCart,

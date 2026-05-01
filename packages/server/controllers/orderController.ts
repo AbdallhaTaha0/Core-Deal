@@ -1,16 +1,16 @@
-import type { Request, Response } from "express";
+import type { Request, Response, RequestHandler } from "express";
 import Order from '../models/order';
 
-const getAllOrders = async (req: Request, res: Response): Promise<void> => {
+const getAllOrders: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 });
     res.status(200).json(orders);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: "Failed to fetch orders", error });
   }
 };
 
-const getSingleOrder = async (req: Request, res: Response): Promise<void> => {
+const getSingleOrder: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const order = await Order.findById(req.params.id);
     if (!order) {
@@ -18,22 +18,22 @@ const getSingleOrder = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     res.status(200).json(order);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: "Failed to fetch order", error });
   }
 };
 
-const addOrder = async (req: Request, res: Response): Promise<void> => {
+const addOrder: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const order = new Order(req.body);
     const saved = await order.save();
     res.status(201).json(saved);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({ message: "Failed to create order", error });
   }
 };
 
-const updateOrder = async (req: Request, res: Response): Promise<void> => {
+const updateOrder: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const updated = await Order.findByIdAndUpdate(
       req.params.id,
@@ -45,12 +45,12 @@ const updateOrder = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     res.status(200).json(updated);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({ message: "Failed to update order", error });
   }
 };
 
-const deleteOrder = async (req: Request, res: Response): Promise<void> => {
+const deleteOrder: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const deleted = await Order.findByIdAndDelete(req.params.id);
     if (!deleted) {
@@ -58,12 +58,12 @@ const deleteOrder = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     res.status(200).json({ message: "Order deleted successfully" });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: "Failed to delete order", error });
   }
 };
 
-module.exports = {
+export default {
   getAllOrders,
   getSingleOrder,
   addOrder,

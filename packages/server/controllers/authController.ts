@@ -1,9 +1,16 @@
-import type { Request, Response } from "express";
+import type { Request, Response, RequestHandler } from "express";
 
 import User from "../models/user";
 
-const handleErrors = (err: any) => {
-  let errors = {
+interface AuthErrors {
+  name: string;
+  email: string;
+  password: string;
+  [key: string]: string;
+}
+
+const handleErrors = (err: any): AuthErrors => {
+  let errors: AuthErrors = {
     name: "",
     email: "",
     password: "",
@@ -15,17 +22,19 @@ const handleErrors = (err: any) => {
     return errors;
   }
   // handle validation errors
-  if (err.message.includes("User validation failed")) {
-    Object.values(err.errors).forEach(({ properties }: any) => {
-      const key: "name" | "email" | "password" = properties.path;
-      errors[key] = properties.message;
+  if (err.message && err.message.includes("User validation failed") && err.errors) {
+    Object.values(err.errors).forEach((error: any) => {
+      if (error.properties && error.properties.path) {
+        const key = error.properties.path;
+        errors[key] = error.properties.message;
+      }
     });
   }
 
   return errors;
 };
 
-const signup_post = async (req: Request, res: Response) => {
+const signup_post: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   const { name, email, password, phone, address, role } = req.body;
   try {
     const newUser = await User.create({ name, email, password, phone, address, role });
@@ -36,7 +45,7 @@ const signup_post = async (req: Request, res: Response) => {
   }
 };
 
-const login_post = async (req: Request, res: Response) => {
+const login_post: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   res.send("logged in");
 };
 

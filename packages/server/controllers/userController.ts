@@ -1,16 +1,16 @@
-import type { Request, Response } from "express";
-const User = require('../models/user');
+import type { Request, Response, RequestHandler } from "express";
+import User from '../models/user';
 
-const getAllUsers = async (req: Request, res: Response): Promise<void> => {
+const getAllUsers: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const users = await User.find().sort({ createdAt: -1 });
     res.status(200).json(users);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: "Failed to fetch users", error });
   }
 };
 
-const getSingleUser = async (req: Request, res: Response): Promise<void> => {
+const getSingleUser: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
@@ -18,22 +18,22 @@ const getSingleUser = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     res.status(200).json(user);
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: "Failed to fetch user", error });
   }
 };
 
-const addUser = async (req: Request, res: Response): Promise<void> => {
+const addUser: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = new User(req.body);
     const saved = await user.save();
     res.status(201).json(saved);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({ message: "Failed to create user", error });
   }
 };
 
-const updateUser = async (req: Request, res: Response): Promise<void> => {
+const updateUser: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const updated = await User.findByIdAndUpdate(
       req.params.id,
@@ -45,12 +45,12 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     res.status(200).json(updated);
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({ message: "Failed to update user", error });
   }
 };
 
-const deleteUser = async (req: Request, res: Response): Promise<void> => {
+const deleteUser: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const deleted = await User.findByIdAndDelete(req.params.id);
     if (!deleted) {
@@ -58,12 +58,12 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     res.status(200).json({ message: "User deleted successfully" });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ message: "Failed to delete user", error });
   }
 };
 
-module.exports = {
+export default {
   getAllUsers,
   getSingleUser,
   addUser,
