@@ -5,6 +5,10 @@ import Product from "./models/product";
 import Order from "./models/order";
 import OrderItem from "./models/orderItem";
 import Cart from "./models/cart";
+import bcrypt from "bcrypt";
+
+const salt = await bcrypt.genSalt();
+const hashedPassword = await bcrypt.hash("123456", salt);
 
 const seedDatabase = async () => {
   try {
@@ -29,7 +33,7 @@ const seedDatabase = async () => {
     const adminUser = await User.create({
       name: "Admin User",
       email: "admin@coredeal.com",
-      password: "password123", // In a real app, hash this!
+      password: hashedPassword, // In a real app, hash this!
       phone: "1234567890",
       address: "123 Admin St, City",
       role: "admin",
@@ -38,7 +42,7 @@ const seedDatabase = async () => {
     const customerUser = await User.create({
       name: "John Doe",
       email: "john@example.com",
-      password: "password123", // Same here
+      password: hashedPassword, // Same here
       phone: "0987654321",
       address: "456 Customer Ave, City",
       role: "customer",
