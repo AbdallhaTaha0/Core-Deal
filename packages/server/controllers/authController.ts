@@ -1,4 +1,6 @@
 import type { Request, Response, RequestHandler } from "express";
+import jwt from "jsonwebtoken";
+import type { Types } from "mongoose";
 
 import User from "../models/user";
 
@@ -34,11 +36,20 @@ const handleErrors = (err: any): AuthErrors => {
   return errors;
 };
 
+const maxAge = 3 * 24 * 60 * 60;
+
+const createToken = (id: Types.ObjectId) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET || "super_secret_key", {
+    expiresIn: maxAge,
+  });
+};
 const signup_post: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   const { name, email, password, phone, address, role } = req.body;
   try {
     const newUser = await User.create({ name, email, password, phone, address, role });
-    res.status(200).send(newUser);
+    const token = createToken(newUser._id);
+    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+    res.status(201).json({ user: newUser._id });
   } catch (err) {
     const errors = handleErrors(err);
     res.status(400).json({ errors });
