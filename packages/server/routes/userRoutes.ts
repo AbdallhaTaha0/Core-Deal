@@ -1,7 +1,7 @@
 
 const express = require('express');
 import type { Router } from "express";
-const  userController  = require('../controllers/userController');
+import  userController  from  '../controllers/userController';
 
 const router: Router = express.Router();
 

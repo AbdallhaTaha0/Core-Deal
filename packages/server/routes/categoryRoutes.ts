@@ -1,6 +1,6 @@
 const express = require('express');
 import type { Request, Response, Router } from "express";
-const categoryController = require('../controllers/categoryController');
+import  categoryController from'../controllers/categoryController';
 
 const router: Router = express.Router();
 
