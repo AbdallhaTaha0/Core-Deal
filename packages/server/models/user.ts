@@ -11,7 +11,11 @@ type UserType  = {
   role : string
 };
 
-const userSchema = new Schema<UserType>(
+interface UserModel extends mongoose.Model<UserType> {
+  login(email: string, password: string): Promise<mongoose.Document<unknown, {}, UserType> & UserType & { _id: mongoose.Types.ObjectId }>;
+}
+
+const userSchema = new Schema<UserType, UserModel>(
   {
     name: {
       type: String,
@@ -67,7 +71,19 @@ userSchema.pre('save', async function() {
   }
 });
 
+// static method to login user
+userSchema.statics.login = async function(email, password) {
+  const user = await this.findOne({ email });
+  if (user) {
+    const auth = await bcrypt.compare(password, user.password);
+    if (auth) {
+      return user;
+    }
+    throw Error("incorrect password");
+  }
+  throw Error("incorrect email");
+};
 
-const User = mongoose.model<UserType>("User", userSchema);
+const User = mongoose.model<UserType, UserModel>("User", userSchema);
 
 export default User;

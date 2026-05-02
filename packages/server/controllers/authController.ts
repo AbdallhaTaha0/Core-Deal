@@ -18,6 +18,16 @@ const handleErrors = (err: any): AuthErrors => {
     password: "",
   };
 
+  // incorrect email
+  if (err.message === "incorrect email") {
+    errors.email = "that email is not registered";
+  }
+
+  // incorrect password
+  if (err.message === "incorrect password") {
+    errors.password = "that password is incorrect";
+  }
+
   // Handle duplication error with code 11000
   if (err.code === 11000) {
     errors.email = "that email is already registered";
@@ -57,7 +67,16 @@ const signup_post: RequestHandler = async (req: Request, res: Response): Promise
 };
 
 const login_post: RequestHandler = async (req: Request, res: Response): Promise<void> => {
-  res.send("logged in");
+  const { email, password } = req.body;
+  try {
+    const user = await User.login(email, password);
+    const token = createToken(user._id);
+    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+    res.status(200).json({ user: user._id });
+  } catch (err) {
+    const errors = handleErrors(err);
+    res.status(400).json({ errors });
+  }
 };
 
 export default { login_post, signup_post };
