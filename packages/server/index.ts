@@ -11,6 +11,7 @@ import orderItemRoutes from "./routes/orderItemRoutes";
 import categoryRoutes from "./routes/categoryRoutes";
 import cartRoute from "./routes/cartRoute";
 import authRoutes from "./routes/authRoutes";
+import requireAuth, { requireRole } from "./middleware/authMiddleware";  
 
 const app = express();
 
@@ -37,12 +38,16 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 app.use(authRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/products", productRoutes);
-app.use("/api/orders", orderRoutes);
-app.use("/api/orderItems", orderItemRoutes);
-app.use("/api/categories", categoryRoutes);
-app.use("/api/carts", cartRoute);
+
+// Admin only routes
+app.use("/api/users", requireAuth, requireRole(["admin"]), userRoutes);
+
+// Routes accessible by both admin and customer
+app.use("/api/products", requireAuth, requireRole(["admin", "customer"]), productRoutes);
+app.use("/api/orders", requireAuth, requireRole(["admin", "customer"]), orderRoutes);
+app.use("/api/orderItems", requireAuth, requireRole(["admin", "customer"]), orderItemRoutes);
+app.use("/api/categories", requireAuth, requireRole(["admin", "customer"]), categoryRoutes);
+app.use("/api/carts", requireAuth, requireRole(["admin", "customer"]), cartRoute);
 
 
 

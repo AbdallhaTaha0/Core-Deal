@@ -79,4 +79,13 @@ const login_post: RequestHandler = async (req: Request, res: Response): Promise<
   }
 };
 
-export default { login_post, signup_post };
+const logout_post: RequestHandler = async (req: Request, res: Response): Promise<void> => {
+  if (req.cookies?.jwt) {
+    res.cookie("jwt", "", { httpOnly: true, maxAge: 1 });
+    res.status(200).json({ message: "Logout successful" });
+  } else {
+    res.status(400).json({ message: "There is no user to log out." });
+  }
+};
+
+export default { login_post, signup_post, logout_post };
