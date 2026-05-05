@@ -63,6 +63,8 @@ const deleteUser: RequestHandler = async (req: Request, res: Response): Promise<
   }
 };
 
+
+
 export default {
   getAllUsers,
   getSingleUser,

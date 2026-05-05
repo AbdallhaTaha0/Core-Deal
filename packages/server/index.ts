@@ -12,6 +12,7 @@ import categoryRoutes from "./routes/categoryRoutes";
 import cartRoute from "./routes/cartRoute";
 import authRoutes from "./routes/authRoutes";
 import requireAuth, { requireRole } from "./middleware/authMiddleware";  
+import meRoutes from "./routes/meRoutes";
 
 const app = express();
 
@@ -41,6 +42,9 @@ app.use(authRoutes);
 
 // Admin only routes
 app.use("/api/users", requireAuth, requireRole(["admin"]), userRoutes);
+
+// Me routes
+app.use("/me", requireAuth, meRoutes);
 
 // Routes accessible by both admin and customer
 app.use("/api/products", requireAuth, requireRole(["admin", "customer"]), productRoutes);

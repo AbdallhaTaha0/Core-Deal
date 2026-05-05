@@ -2,13 +2,15 @@ import mongoose , { Schema } from 'mongoose';
 import { isEmail } from 'validator';
 import bcrypt from 'bcrypt';
 
-type UserType  = {
+export type UserType  = {
   name : string,
   email : string,
   password : string,
   phone? : string,
   address? : string,
-  role : string
+  role : string,
+  createdAt : string,
+  updatedAt: string
 };
 
 interface UserModel extends mongoose.Model<UserType> {
