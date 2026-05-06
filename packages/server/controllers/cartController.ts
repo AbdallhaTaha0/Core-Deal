@@ -4,9 +4,9 @@ import Cart from '../models/cart';
 const getAllCarts: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const carts = await Cart.find().sort({ createdAt: -1 });
-    res.status(200).json(carts);
+    res.status(200).json({ success: true, message: "Carts fetched successfully", data: { carts } });
   } catch (error: any) {
-    res.status(500).json({ message: "Failed to fetch carts", error });
+    res.status(500).json({ success: false, message: "Failed to fetch carts", error });
   }
 };
 
@@ -14,12 +14,12 @@ const getSingleCart: RequestHandler = async (req: Request, res: Response): Promi
   try {
     const cart = await Cart.findById(req.params.id);
     if (!cart) {
-      res.status(404).json({ message: "Cart not found" });
+      res.status(404).json({ success: false, message: "Cart not found" });
       return;
     }
-    res.status(200).json(cart);
+    res.status(200).json({ success: true, message: "Cart fetched successfully", data: { cart } });
   } catch (error: any) {
-    res.status(500).json({ message: "Failed to fetch cart", error });
+    res.status(500).json({ success: false, message: "Failed to fetch cart", error });
   }
 };
 
@@ -27,9 +27,9 @@ const addCart: RequestHandler = async (req: Request, res: Response): Promise<voi
   try {
     const cart = new Cart(req.body);
     const saved = await cart.save();
-    res.status(201).json(saved);
+    res.status(201).json({ success: true, message: "Cart created successfully", data: { cart: saved } });
   } catch (error: any) {
-    res.status(400).json({ message: "Failed to create cart", error });
+    res.status(400).json({ success: false, message: "Failed to create cart", error });
   }
 };
 
@@ -41,12 +41,12 @@ const updateCart: RequestHandler = async (req: Request, res: Response): Promise<
       { new: true, runValidators: true }
     );
     if (!updated) {
-      res.status(404).json({ message: "Cart not found" });
+      res.status(404).json({ success: false, message: "Cart not found" });
       return;
     }
-    res.status(200).json(updated);
+    res.status(200).json({ success: true, message: "Cart updated successfully", data: { cart: updated } });
   } catch (error: any) {
-    res.status(400).json({ message: "Failed to update cart", error });
+    res.status(400).json({ success: false, message: "Failed to update cart", error });
   }
 };
 
@@ -54,12 +54,12 @@ const deleteCart: RequestHandler = async (req: Request, res: Response): Promise<
   try {
     const deleted = await Cart.findByIdAndDelete(req.params.id);
     if (!deleted) {
-      res.status(404).json({ message: "Cart not found" });
+      res.status(404).json({ success: false, message: "Cart not found" });
       return;
     }
-    res.status(200).json({ message: "Cart deleted successfully" });
+    res.status(200).json({ success: true, message: "Cart deleted successfully" });
   } catch (error: any) {
-    res.status(500).json({ message: "Failed to delete cart", error });
+    res.status(500).json({ success: false, message: "Failed to delete cart", error });
   }
 };
 

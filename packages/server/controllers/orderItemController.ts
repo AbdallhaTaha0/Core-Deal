@@ -4,9 +4,9 @@ import OrderItem from '../models/orderItem';
 const getAllOrderItems: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const orderItems = await OrderItem.find().sort({ createdAt: -1 });
-    res.status(200).json(orderItems);
+    res.status(200).json({ success: true, message: "Order items fetched successfully", data: { orderItems } });
   } catch (error: any) {
-    res.status(500).json({ message: "Failed to fetch order items", error });
+    res.status(500).json({ success: false, message: "Failed to fetch order items", error });
   }
 };
 
@@ -14,12 +14,12 @@ const getSingleOrderItem: RequestHandler = async (req: Request, res: Response): 
   try {
     const orderItem = await OrderItem.findById(req.params.id);
     if (!orderItem) {
-      res.status(404).json({ message: "Order item not found" });
+      res.status(404).json({ success: false, message: "Order item not found" });
       return;
     }
-    res.status(200).json(orderItem);
+    res.status(200).json({ success: true, message: "Order item fetched successfully", data: { orderItem } });
   } catch (error: any) {
-    res.status(500).json({ message: "Failed to fetch order item", error });
+    res.status(500).json({ success: false, message: "Failed to fetch order item", error });
   }
 };
 
@@ -27,9 +27,9 @@ const addOrderItem: RequestHandler = async (req: Request, res: Response): Promis
   try {
     const orderItem = new OrderItem(req.body);
     const saved = await orderItem.save();
-    res.status(201).json(saved);
+    res.status(201).json({ success: true, message: "Order item created successfully", data: { orderItem: saved } });
   } catch (error: any) {
-    res.status(400).json({ message: "Failed to create order item", error });
+    res.status(400).json({ success: false, message: "Failed to create order item", error });
   }
 };
 
@@ -41,12 +41,12 @@ const updateOrderItem: RequestHandler = async (req: Request, res: Response): Pro
       { new: true, runValidators: true }
     );
     if (!updated) {
-      res.status(404).json({ message: "Order item not found" });
+      res.status(404).json({ success: false, message: "Order item not found" });
       return;
     }
-    res.status(200).json(updated);
+    res.status(200).json({ success: true, message: "Order item updated successfully", data: { orderItem: updated } });
   } catch (error: any) {
-    res.status(400).json({ message: "Failed to update order item", error });
+    res.status(400).json({ success: false, message: "Failed to update order item", error });
   }
 };
 
@@ -54,12 +54,12 @@ const deleteOrderItem: RequestHandler = async (req: Request, res: Response): Pro
   try {
     const deleted = await OrderItem.findByIdAndDelete(req.params.id);
     if (!deleted) {
-      res.status(404).json({ message: "Order item not found" });
+      res.status(404).json({ success: false, message: "Order item not found" });
       return;
     }
-    res.status(200).json({ message: "Order item deleted successfully" });
+    res.status(200).json({ success: true, message: "Order item deleted successfully" });
   } catch (error: any) {
-    res.status(500).json({ message: "Failed to delete order item", error });
+    res.status(500).json({ success: false, message: "Failed to delete order item", error });
   }
 };
 
